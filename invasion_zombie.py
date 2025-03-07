@@ -7,8 +7,7 @@ class Building:
         self.floors = []
         self.floors_count = floors_count
         self.rooms_floor = rooms_floor
-#Crea los pisos y habitaciones
-        for i in range(floors_count):
+        for i in range(floors_count): #Crea los pisos y habitaciones
             floor = Floor(i, rooms_floor)
             self.floors.append(floor)
 #Muestra el estado actual del edificio    
@@ -80,9 +79,8 @@ class Simulation:
 
 #Definimos movimientos y lo guardamos en una lista    
     def advance_turn(self):
-        new_positions = []
+        new_positions = set(self.zombie_positions)
         for floor_num, room_num in self.zombie_positions:
-            self.building.floors[floor_num].rooms[room_num].remove_zombies()
             possible_moves = []
             if room_num > 0:
                 possible_moves.append((floor_num, room_num - 1))
@@ -93,28 +91,32 @@ class Simulation:
             if floor_num < self.building.floors_count - 1:
                 possible_moves.append((floor_num + 1, room_num))
             
-            if possible_moves:
-                new_positions.append(random.choice(possible_moves))
+            for move in possible_moves:
+                if move not in new_positions:
+                    self.building.floors[move[0]].rooms[move[1]].add_zombies()
+                    new_positions.add(move)
         
-        for floor_num, room_num in new_positions:
-            self.building.floors[floor_num].rooms[room_num].add_zombies()
-        
-        self.zombie_positions = new_positions
+        self.zombie_positions = list(new_positions)
     
-    def run(self):
+    def play(self):
         while True:
-            print("\nEstado actual del edificio:")
+            print("\n--- ESTADO DEL EDIFICIO ---")
             self.building.show_status()
-        
-            action = input("¿Avanzar turno? (y/n): ").strip().lower()
-        
-            if action == 'y':
+            print("1. Avanzar turno !!NOS INVADEN LOS ZOMBIES!!")
+            print("2. Mostrar estado del edificio")
+            print("3. Salir")
+            choice = input("Selecciona una opción: ")
+            
+            if choice == '1':
                 self.advance_turn()
-            elif action == 'n':
+            elif choice == '2':
+                continue
+            
+            elif choice == '3':
                 print("Simulación terminada.")
                 break
             else:
-                print("Entrada no válida. Por favor, ingresa 'y' para avanzar o 'n' para salir.")
+                print("Opción no válida. Intenta de nuevo.")
 
 
 if __name__ == "__main__":
@@ -123,5 +125,5 @@ if __name__ == "__main__":
     zombies = int(input("¿Cuántos zombis iniciales? "))
     
     simulation = Simulation(floors, rooms, zombies)
-    simulation.run()
+    simulation.play()
     
