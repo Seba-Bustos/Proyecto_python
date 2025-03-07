@@ -12,7 +12,7 @@ Este proyecto es una simulación en Python de un edificio donde los zombis puede
 - Python 3.7 o superior instalado en tu sistema.
 
 ## Instalación y Ejecución
-1. Clona este repositorio o descarga el archivo `simulation.py`:
+1. Clona este repositorio o descarga el archivo `invasion_zombie.py`:
    ```bash
    git clone https://github.com/tu-usuario/tu-repositorio.git
    cd tu-repositorio
